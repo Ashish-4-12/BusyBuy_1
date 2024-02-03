@@ -1,10 +1,22 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import styles from "./RegisterPage.module.css";
 
 const RegisterPage = () => {
-// Create your state or ref here to store the value of the input fields
 
-// write the submit handler function to validate the forma and signup the user 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000)
+  }, []);
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+  }
+  // Create your state or ref here to store the value of the input fields
+
+  // write the submit handler function to validate the forma and signup the user 
   return (
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={onSubmitHandler}>

@@ -9,9 +9,9 @@ root.render(
   <React.StrictMode>
     {/* Include your context provider and browser Router here */}
     <AuthContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      {/* <BrowserRouter> */}
+      <App />
+      {/* </BrowserRouter> */}
     </AuthContextProvider>
   </React.StrictMode>
 );

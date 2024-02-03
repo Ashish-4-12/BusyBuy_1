@@ -1,8 +1,15 @@
-import React, { useRef, useContext, useEffect } from "react";
+import React, { useRef, useContext, useEffect, useState } from "react";
 import styles from "./LoginPage.module.css";
 import { NavLink } from "react-router-dom";
 
 const LoginPage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000)
+  }, []);
 
   return (
     <div className={styles.formContainer}>

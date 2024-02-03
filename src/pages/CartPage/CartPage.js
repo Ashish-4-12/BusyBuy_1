@@ -4,6 +4,13 @@ import styles from "./CartPage.module.css";
 
 const CartPage = () => {
 
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000)
+  }, []);
+
   // Write logic to Clear user cart
 
   // Write logic to Fetch user cart products
@@ -19,7 +26,7 @@ const CartPage = () => {
       (
       {/* write code here to display the item in the cart if there are items present in the cart. */}
       ) : (
-        <h1>Cart is Empty!</h1>
+      <h1>Cart is Empty!</h1>
       )
     </div>
   );
