@@ -50,13 +50,7 @@ function App() {
         draggable
         pauseOnHover
       />
-
-      {/* <header>
-        <Navbar />
-      </header> */}
       <RouterProvider router={router} />
-
-
     </div>
   );
 }

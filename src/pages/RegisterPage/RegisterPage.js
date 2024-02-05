@@ -1,5 +1,8 @@
-import React, { useRef, useEffect, useContext, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styles from "./RegisterPage.module.css";
+import { useAuthValue } from "../../context/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 const RegisterPage = () => {
 
@@ -8,11 +11,33 @@ const RegisterPage = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 3000)
+    }, 0)
   }, []);
 
-  const onSubmitHandler = (e) => {
+
+  const nameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const navigate = useNavigate();
+
+  const { createUser } = useAuthValue();
+
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
+
+    const data = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value
+    }
+
+    const userCreated = await createUser(data);
+    // console.log(userCreated === undefined, userCreated);
+    console.log(userCreated);
+
+    if (userCreated === true) {
+      navigate("/");
+    }
   }
   // Create your state or ref here to store the value of the input fields
 
@@ -26,18 +51,21 @@ const RegisterPage = () => {
           name="name"
           placeholder="Enter Name"
           className={styles.loginInput}
+          ref={nameRef}
         />
         <input
           type="email"
           name="email"
           className={styles.loginInput}
           placeholder="Enter Email"
+          ref={emailRef}
         />
         <input
           type="password"
           name="password"
           className={styles.loginInput}
           placeholder="Enter Password"
+          ref={passwordRef}
         />
         <button className={styles.loginBtn}>
           {loading ? "..." : "Sign Up"}

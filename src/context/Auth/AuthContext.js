@@ -1,27 +1,17 @@
-
-// react hooks
 import { createContext, useContext, useEffect, useState } from "react";
-
-// firebase database
 import { db } from "../../config/firebase";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
-
-// toast notification
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
-
-
-// create contextAPI for authentication 
 export const AuthContext = createContext();
-
 
 // custom context hook to return values
 export function useAuthValue() {
     const value = useContext(AuthContext);
     return value;
 }
-
 
 // custom context Provider
 export function AuthContextProvider({ children }) {
@@ -34,79 +24,45 @@ export function AuthContextProvider({ children }) {
     const [userLoggedIn, setUserLoggedIn] = useState(null);
 
 
-
-    // getting all the users from data base on first render of page
-    useEffect(() => {
-        const unsub = onSnapshot(collection(db, "buybusy"), (snapShot) => {
-            const users = snapShot.docs.map((doc) => {
-                return {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            });
-            setUserList(users);
-        });
-    }, [isLoggedIn]);
-
-
-
+    const auth = getAuth();
 
     // creating new user
     async function createUser(data) {
-        // checking whether the email address already in use or not
-        const index = userList.findIndex((user) => user.email === data.email);
+        try {
+            await createUserWithEmailAndPassword(auth, data.email, data.password);
+            console.log('User signed up successfully!');
+            return true;
+        } catch (error) {
+            if (error.code === 'auth/email-already-in-use') {
+                toast.error("Error (auth/email-already-in-use).");
+            } else {
+                toast.error("Please enter valid data!", {
+                    toastId: "error1",
+                });
 
-        // if found email display notification
-        if (index !== -1) {
-            toast.error("Email Address already exist, Try Again or SignIn Instead!!!");
-            return;
+                // console.log("Sign UP");
+            }
         }
-
-        // if email not found create new user 
-        const docRef = await addDoc(collection(db, "buybusy"), {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            cart: [],
-            orders: []
-        });
-        toast.success("New user Created, Please LogIn to Continue !!");
     }
-
-
-
 
     // sign IN user 
     async function signIn(data) {
-        // finding user in database
-        const index = userList.findIndex((user) => user.email === data.email);
 
-        // if user not found show notification
-        if (index === -1) {
-            toast.error("Email does not exist, Try again or SignUp Instead!!!");
-            return false;
-        }
-
-        // if email found in database then match password
-        if (userList[index].password === data.password) {
-            toast.success("Sign In Successfully!!!");
-            // logging in user and storing its data in local variable
-            setLoggedIn(true);
-            setUserLoggedIn(userList[index]);
-            // generating user's login token and store user's data 
-            window.localStorage.setItem("token", true);
-            window.localStorage.setItem("index", JSON.stringify(userList[index]));
+        try {
+            await signInWithEmailAndPassword(auth, data.email, data.password);
+            console.log('User signed in successfully!');
             return true;
-        }
-        else {
-            // if password doesn't match in database
-            toast.error("Wrong UserName/Password, Try Again");
-            return false;
+        } catch (error) {
+            if (data.password.length < 6) {
+                // toast.error("Please enter valid data!");
+                console.log("sign IN password length < 6")
+            }
+            else if (error.code === "auth/invalid-login-credentials") {
+                toast.error("Error (auth/wrong-password).");
+            }
+            throw error;
         }
     }
-
-
-
 
     // signout function 
     function signOut() {
@@ -138,7 +94,7 @@ export function AuthContextProvider({ children }) {
                     signOut
                 }
             }>
-                <ToastContainer />
+                {/* <ToastContainer /> */}
                 {children}
             </AuthContext.Provider>
         </>
