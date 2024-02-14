@@ -14,6 +14,7 @@ const ProductList = ({
   return (
     <ProductGrid style={{ ...style }}>
       {products.map((product, idx) => {
+        // console.log(idx, "   ", product);
         return (
           <ProductCard
             product={product}

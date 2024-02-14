@@ -1,25 +1,35 @@
-import React, { useState, useContext } from "react";
+// ProductDetails.jsx
+import React, { useEffect, useState } from "react";
 import styles from "./ProductDetails.module.css";
 import MinusIcon from "../../../UI/Icons/MinusIcon";
 import PlusIcon from "../../../UI/Icons/PlusIcon";
 
-
 const ProductDetails = ({
   title,
+  price,
   onCart,
+  handleAddToCart,
+  handleRemoveFromCart,
+  quantity,
 }) => {
   const [productAddingToCart, setProductAddingToCart] = useState(false);
   const [productRemovingFromCart, setProductRemovingCart] = useState(false);
 
-// Create a Function to add product to cart
+  const handleAddClick = () => {
+    setProductAddingToCart(true);
+    setTimeout(() => {
+      setProductAddingToCart(false);
+    }, 1000);
+    handleAddToCart(); // Call your add to cart function here
+  };
 
-// Create a new cart if it does not exist
-
-// Create a function to remove the cart
-
-  //Create a Function for Handling the product quantity increase
-  
-  //Create a function for  Handling the product quantity decrease
+  const handleRemoveClick = () => {
+    setProductRemovingCart(true);
+    setTimeout(() => {
+      setProductRemovingCart(false);
+    }, 1000);
+    handleRemoveFromCart(); // Call your remove from cart function here
+  };
 
   return (
     <div className={styles.productDetails}>
@@ -27,20 +37,27 @@ const ProductDetails = ({
         <p>{`${title.slice(0, 35)}...`}</p>
       </div>
       <div className={styles.productOptions}>
-        {/* <p>₹ {price}</p> */}
+        <p> &#8377; {price}</p>
         {onCart && (
           <div className={styles.quantityContainer}>
-            <MinusIcon handleRemove={} />
-            {}
-            <PlusIcon handleAdd={} />
+            <MinusIcon
+              handleRemove={handleRemoveClick}
+              disabled={productRemovingFromCart}
+            />
+            <span>{quantity}</span>
+            <PlusIcon
+              handleAdd={handleAddClick}
+              disabled={productAddingToCart}
+            />
           </div>
         )}
       </div>
-      {/* Conditionally Rendering buttons based on the screen */}
       {!onCart ? (
         <button
           className={styles.addBtn}
           title="Add to Cart"
+          onClick={handleAddClick}
+          disabled={productAddingToCart}
         >
           {productAddingToCart ? "Adding" : "Add To Cart"}
         </button>
@@ -48,6 +65,8 @@ const ProductDetails = ({
         <button
           className={styles.removeBtn}
           title="Remove from Cart"
+          onClick={handleRemoveClick}
+          disabled={productRemovingFromCart}
         >
           {productRemovingFromCart ? "Removing" : "Remove From Cart"}
         </button>
