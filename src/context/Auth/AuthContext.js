@@ -3,7 +3,7 @@ import { db } from "../../config/firebase";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 export const AuthContext = createContext();
 
@@ -18,10 +18,8 @@ export function AuthContextProvider({ children }) {
 
     // list of all the users in database
     const [userList, setUserList] = useState([]);
-    // loggedIn user's status
-    const [isLoggedIn, setLoggedIn] = useState(false);
     // user who is logged in
-    const [userLoggedIn, setUserLoggedIn] = useState(null);
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
 
 
     const auth = getAuth();
@@ -51,6 +49,8 @@ export function AuthContextProvider({ children }) {
         try {
             await signInWithEmailAndPassword(auth, data.email, data.password);
             console.log('User signed in successfully!');
+            setUserLoggedIn(true);
+            console.log("login", userLoggedIn);
             return true;
         } catch (error) {
             if (data.password.length < 6) {
@@ -66,19 +66,11 @@ export function AuthContextProvider({ children }) {
 
     // signout function 
     function signOut() {
-
-        // removing user' data and token from local storage
-        window.localStorage.removeItem("token");
-        window.localStorage.removeItem("index");
-
-        // set loggin status false
-        setLoggedIn(false);
-        // loggedin user's data
-        setUserLoggedIn(null);
+        signOut(auth);
+        setUserLoggedIn(false);
+        console.log("logout", userLoggedIn);
         toast.success("Sign Out Successfully!!!!");
     }
-
-
 
     return (
         // context API with values
@@ -86,8 +78,6 @@ export function AuthContextProvider({ children }) {
             <AuthContext.Provider value={
                 {
                     createUser,
-                    isLoggedIn,
-                    setLoggedIn,
                     signIn,
                     userLoggedIn,
                     setUserLoggedIn,

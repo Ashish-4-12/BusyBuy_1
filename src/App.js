@@ -29,7 +29,7 @@ function App() {
       errorElement: <NotFoundPage />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: "/myorder", element: <OrdersPage /> },
+        { path: "/myorders", element: <OrdersPage /> },
         { path: "/cart", element: <CartPage /> },
         { path: "/signin", element: <LoginPage /> },
         { path: "/signup", element: <RegisterPage /> },

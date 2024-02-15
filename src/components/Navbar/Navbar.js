@@ -13,8 +13,8 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 const Navbar = () => {
   const [click, setClick] = useState(false);
 
-  const { user, logout } = useContext(AuthContext);
-  const isAuthenticated = user;
+  const { userLoggedIn, signOut } = useContext(AuthContext);
+  const isAuthenticated = userLoggedIn;
 
   const scrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -23,7 +23,7 @@ const Navbar = () => {
   // Function to logout from app
   const onLogoutHandler = () => {
     scrollTop();
-    logout(); // inbuilt firebase function to logout
+    signOut(); // inbuilt firebase function to logout
   };
 
   return (
