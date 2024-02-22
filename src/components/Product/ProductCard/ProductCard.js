@@ -16,6 +16,7 @@ const ProductCard = ({
     <ProductContainer>
       <ProductImage image={image} />
       <ProductDetails
+        id={id}
         title={title}
         price={price}
         onOwnPage={onOwnPage}

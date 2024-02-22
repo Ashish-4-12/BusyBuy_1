@@ -8,7 +8,6 @@ import { collection, getDocs } from 'firebase/firestore';
 
 function HomePage() {
   const [products, setProducts] = useState([]);
-  // const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterParams, setFilterParams] = useState({
     priceRange: 75000,
@@ -25,12 +24,10 @@ function HomePage() {
           return { title: productData.title, price: productData.price, image: productData.image, id: productData.id, quantity: productData.quantity };
         });
         setProducts(productsData);
-        // console.log(productsData);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -42,9 +39,7 @@ function HomePage() {
       );
       console.log(filteredProducts);
       setProducts(filteredProducts);
-
     };
-
     handleSearchChange();
   }, [searchTerm]);
 
